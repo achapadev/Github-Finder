@@ -6,9 +6,10 @@ import GithubContext from '../../context/github/GithubContext';
 
 function UserResults() {
   const { users, loading, fetchUsers } = useContext(GithubContext);
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  // useEffect(() => {
+  //   // fetchUsers was just for testing purposes to have something in state to create UserResult/Item components
+  //   fetchUsers();
+  // }, []);
 
   if (!loading) {
     return (

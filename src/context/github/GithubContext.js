@@ -12,12 +12,15 @@ export const GithubProvider = ({ children }) => {
   //   const [loading, setLoading] = useState(true);
   const initialState = {
     users: [],
-    loading: true,
+    loading: false,
   };
 
   const [state, dispatch] = useReducer(githubReducer, initialState);
 
+  // Get initial users (testing purposes)
+  // Ultimately we'll have a searchUsers that when we submit form gets those users and puts them into the state
   const fetchUsers = async () => {
+    setLoading();
     const response = await fetch(`${GITHUB_URL}/users`, {
       headers: {
         Authorization: `token ${GITHUB_TOKEN}`,
@@ -33,6 +36,13 @@ export const GithubProvider = ({ children }) => {
     });
     //     setUsers(data);
     //     setLoading(false);
+  };
+
+  // Set loading
+  const setLoading = () => {
+    dispatch({
+      type: 'SET_LOADING',
+    });
   };
 
   return (
