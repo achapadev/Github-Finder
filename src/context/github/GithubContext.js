@@ -19,24 +19,37 @@ export const GithubProvider = ({ children }) => {
 
   // Get initial users (testing purposes)
   // Ultimately we'll have a searchUsers that when we submit form gets those users and puts them into the state
-  const fetchUsers = async () => {
+  // const fetchUsers = async () => {
+  //   setLoading();
+  //   const response = await fetch(`${GITHUB_URL}/users`, {
+  //     headers: {
+  //       Authorization: `token ${GITHUB_TOKEN}`,
+  //     },
+  //   });
+
+  // Get search results
+  const searchUsers = async (text) => {
     setLoading();
-    const response = await fetch(`${GITHUB_URL}/users`, {
+
+    const params = new URLSearchParams({
+      q: text,
+    });
+    const response = await fetch(`${GITHUB_URL}/search/users?${params}`, {
       headers: {
         Authorization: `token ${GITHUB_TOKEN}`,
       },
     });
-
-    const data = await response.json();
+    const { items } = await response.json();
     //     Dispatching the type get_users and sending the fetched data as payload
     //     payload property can be called anything but convention is to call it payload
     dispatch({
       type: 'GET_USERS',
-      payload: data,
+      payload: items,
     });
-    //     setUsers(data);
-    //     setLoading(false);
   };
+
+  //     setUsers(data);
+  //     setLoading(false);
 
   // Set loading
   const setLoading = () => {
@@ -48,7 +61,7 @@ export const GithubProvider = ({ children }) => {
   return (
     <GithubContext.Provider
       //     we do users:state.users because we are getting it from line 18
-      value={{ users: state.users, loading: state.loading, fetchUsers }}
+      value={{ users: state.users, loading: state.loading, searchUsers }}
     >
       {children}
     </GithubContext.Provider>
