@@ -3,8 +3,9 @@ import githubReducer from './GithubReducer';
 
 const GithubContext = createContext();
 
-const GITHUB_URL = process.env.REACT_APP_GITHUB_URL;
-const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
+// only using the two below now in actions file
+// const GITHUB_URL = process.env.REACT_APP_GITHUB_URL;
+// const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
 
 // need to export Provider function
 export const GithubProvider = ({ children }) => {
@@ -29,103 +30,98 @@ export const GithubProvider = ({ children }) => {
   //     },
   //   });
 
-  // Get search results
-  const searchUsers = async (text) => {
-    setLoading();
+  // // Get search results
+  // const searchUsers = async (text) => {
+  //   setLoading();
 
-    const params = new URLSearchParams({
-      q: text,
-    });
-    const response = await fetch(`${GITHUB_URL}/search/users?${params}`, {
-      headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
-      },
-    });
-    const { items } = await response.json();
-    //     Dispatching the type get_users and sending the fetched data as payload
-    //     payload property can be called anything but convention is to call it payload
-    dispatch({
-      type: 'GET_USERS',
-      payload: items,
-    });
-  };
+  //   const params = new URLSearchParams({
+  //     q: text,
+  //   });
+  //   const response = await fetch(`${GITHUB_URL}/search/users?${params}`, {
+  //     headers: {
+  //       Authorization: `token ${GITHUB_TOKEN}`,
+  //     },
+  //   });
+  //   const { items } = await response.json();
+  //   //     Dispatching the type get_users and sending the fetched data as payload
+  //   //     payload property can be called anything but convention is to call it payload
+  //   dispatch({
+  //     type: 'GET_USERS',
+  //     payload: items,
+  //   });
+  // };
 
-  // Get single user
-  const getUser = async (login) => {
-    setLoading();
+  // // Get single user
+  // const getUser = async (login) => {
+  //   setLoading();
 
-    const response = await fetch(`${GITHUB_URL}/users/${login}`, {
-      headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
-      },
-    });
+  //   const response = await fetch(`${GITHUB_URL}/users/${login}`, {
+  //     headers: {
+  //       Authorization: `token ${GITHUB_TOKEN}`,
+  //     },
+  //   });
 
-    if (response.status === 404) {
-      window.location = '/notfound';
-    } else {
-      // data is single user that comes back from response
-      const data = await response.json();
-      //     Dispatching the type get_users and sending the fetched data as payload
-      //     payload property can be called anything but convention is to call it payload
-      dispatch({
-        type: 'GET_USER',
-        payload: data,
-      });
-    }
-  };
+  //   if (response.status === 404) {
+  //     window.location = '/notfound';
+  //   } else {
+  //     // data is single user that comes back from response
+  //     const data = await response.json();
+  //     //     Dispatching the type get_users and sending the fetched data as payload
+  //     //     payload property can be called anything but convention is to call it payload
+  //     dispatch({
+  //       type: 'GET_USER',
+  //       payload: data,
+  //     });
+  //   }
+  // };
 
-  // Get user repos
-  const getUserRepos = async (login) => {
-    setLoading();
+  // // Get user repos
+  // const getUserRepos = async (login) => {
+  //   setLoading();
 
-    const params = new URLSearchParams({
-      sort: 'created',
-      per_page: 10,
-    });
+  //   const params = new URLSearchParams({
+  //     sort: 'created',
+  //     per_page: 10,
+  //   });
 
-    const response = await fetch(
-      `${GITHUB_URL}/users/${login}/repos?${params}`,
-      {
-        headers: {
-          Authorization: `token ${GITHUB_TOKEN}`,
-        },
-      }
-    );
-    const data = await response.json();
-    //     Dispatching the type get_users and sending the fetched data as payload
-    //     payload property can be called anything but convention is to call it payload
-    dispatch({
-      type: 'GET_REPOS',
-      payload: data,
-    });
-  };
+  //   const response = await fetch(
+  //     `${GITHUB_URL}/users/${login}/repos?${params}`,
+  //     {
+  //       headers: {
+  //         Authorization: `token ${GITHUB_TOKEN}`,
+  //       },
+  //     }
+  //   );
+  //   const data = await response.json();
+  //   //     Dispatching the type get_users and sending the fetched data as payload
+  //   //     payload property can be called anything but convention is to call it payload
+  //   dispatch({
+  //     type: 'GET_REPOS',
+  //     payload: data,
+  //   });
+  // };
+
   // Clear users from state
-  const clearUsers = () => {
-    dispatch({ type: 'CLEAR_USERS' });
-  };
+  // const clearUsers = () => {
+  //   dispatch({ type: 'CLEAR_USERS' });
+  // };
 
   //     setUsers(data);
   //     setLoading(false);
 
-  // Set loading
-  const setLoading = () => {
-    dispatch({
-      type: 'SET_LOADING',
-    });
-  };
+  // // Set loading
+  // const setLoading = () => {
+  //   dispatch({
+  //     type: 'SET_LOADING',
+  //   });
+  // };
 
   return (
     <GithubContext.Provider
       //     we do users:state.users because we are getting it from line 18
       value={{
-        users: state.users,
-        loading: state.loading,
-        user: state.user,
-        repos: state.repos,
-        getUser,
-        getUserRepos,
-        searchUsers,
-        clearUsers,
+        ...state,
+        dispatch,
       }}
     >
       {children}
