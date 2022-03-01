@@ -12,6 +12,7 @@ export const GithubProvider = ({ children }) => {
   //   const [loading, setLoading] = useState(true);
   const initialState = {
     users: [],
+    user: {},
     loading: false,
   };
 
@@ -48,6 +49,30 @@ export const GithubProvider = ({ children }) => {
     });
   };
 
+  // Get single user
+  const getUser = async (login) => {
+    setLoading();
+
+    const response = await fetch(`${GITHUB_URL}/users/${login}`, {
+      headers: {
+        Authorization: `token ${GITHUB_TOKEN}`,
+      },
+    });
+
+    if (response.status === 404) {
+      window.location = '/notfound';
+    } else {
+      // data is single user that comes back from response
+      const data = await response.json();
+      //     Dispatching the type get_users and sending the fetched data as payload
+      //     payload property can be called anything but convention is to call it payload
+      dispatch({
+        type: 'GET_USER',
+        payload: data,
+      });
+    }
+  };
+
   // Clear users from state
   const clearUsers = () => {
     dispatch({ type: 'CLEAR_USERS' });
@@ -69,6 +94,8 @@ export const GithubProvider = ({ children }) => {
       value={{
         users: state.users,
         loading: state.loading,
+        user: state.user,
+        getUser,
         searchUsers,
         clearUsers,
       }}
